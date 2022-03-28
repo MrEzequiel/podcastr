@@ -1,35 +1,24 @@
 import type { NextPage, GetStaticProps } from 'next'
 
-import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-
 import IEpisode from '../interface/IEpisode'
-import api from '../services/api'
-import convertDurationToTimeString from '../utils/convertDurationToTimeString'
 import {
   AllEpisodes,
   EpisodeDetails,
   HomeWrapper,
   LatestEpisode,
 } from '../styles/HomeStyle'
-import Image from 'next/image'
 
 import { MdPlayArrow } from 'react-icons/md'
 import Link from 'next/link'
+import loadEpisodes from '../lib/loadEpisodes'
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data } = await api('episodes')
-
-  const episodes = data.episodes.map((episode: IEpisode) => {
-    return {
-      ...episode,
-      published_at: format(parseISO(episode.published_at), 'd MMM yy', {
-        locale: ptBR,
-      }),
-      file: {
-        duration: convertDurationToTimeString(episode.file.duration),
-      },
-    }
+  const episodes = await loadEpisodes({
+    params: {
+      _limit: 12,
+      _sort: 'published_at',
+      _order: 'desc',
+    },
   })
 
   const latestEpisodes = episodes.slice(0, 2)

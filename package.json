@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "server": "json-server --watch data.json --port 3333 --delay--delay 650"
   },
   "dependencies": {
     "axios": "^0.26.1",
     "date-fns": "^2.28.0",
+    "json-server": "^0.17.0",
     "next": "12.1.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",

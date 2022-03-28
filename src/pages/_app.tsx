@@ -1,5 +1,7 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect, useRef } from 'react'
 import { ThemeProvider } from 'styled-components'
 import Header from '../components/Header'
 import Player from '../components/Player'
@@ -12,6 +14,21 @@ import { GlobalStyles } from '../styles/GlobalStyle'
 import mainTheme from '../styles/theme/mainTheme'
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter()
+  const mainContainerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleRouteComplete = () => {
+      if (mainContainerRef.current) {
+        mainContainerRef.current.scrollTo(0, 0)
+      }
+    }
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteComplete)
+    }
+  }, [router])
+
   return (
     <ThemeProvider theme={mainTheme}>
       <Head>
@@ -21,7 +38,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <AppContainer>
         <MainContainer>
           <Header />
-          <ComponentWrapper>
+          <ComponentWrapper ref={mainContainerRef}>
             <Component {...pageProps} />
           </ComponentWrapper>
         </MainContainer>

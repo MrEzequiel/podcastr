@@ -9,6 +9,19 @@ export const EpisodeWrapper = styled.div`
 export const ThumbnailContainer = styled.div`
   position: relative;
 
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: initial;
+    }
+  }
+
+  animation: fadeIn 800ms ease forwards;
+
   img {
     width: 100%;
     height: 15rem;
@@ -64,14 +77,33 @@ export const HeaderContainer = styled.header`
   padding-bottom: 1rem;
   border-bottom: 1px solid ${({ theme }) => theme.colors.gray100};
 
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: initial;
+    }
+  }
+
   h1 {
+    opacity: 0;
     margin-top: 2rem;
     margin-bottom: 1.5rem;
+
+    animation: fadeIn 800ms ease forwards;
+    animation: fadeIn 800ms ease 300ms forwards;
   }
 
   span {
+    opacity: 0;
     display: inline-block;
     font-size: 0.875rem;
+
+    animation: fadeIn 800ms ease forwards;
+    animation: fadeIn 800ms ease 400ms forwards;
 
     & + span {
       margin-left: 0.5rem;

@@ -1,45 +1,48 @@
-import { format, parseISO } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import Link from 'next/link'
-import { MdArrowBack, MdArrowForward, MdPlayArrow } from 'react-icons/md'
+import { MdArrowBack, MdPlayArrow } from 'react-icons/md'
 
 import IEpisode from '../../interface/IEpisode'
-import api from '../../services/api'
-import convertDurationToTimeString from '../../utils/convertDurationToTimeString'
 import {
   DescriptionContainer,
   EpisodeWrapper,
   HeaderContainer,
   ThumbnailContainer,
-} from './style'
+} from '../../styles/EpisodeStyle'
+import loadEpisodes from '../../lib/loadEpisodes'
+import Head from 'next/head'
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const episodesForPath = await loadEpisodes({
+    params: {
+      _limit: 2,
+      _sort: 'published_at',
+      _order: 'desc',
+    },
+  })
+
+  const paths = episodesForPath.map(episode => ({
+    params: {
+      slug: episode.id,
+    },
+  }))
+
   return {
-    paths: [],
+    paths,
     fallback: 'blocking',
   }
 }
 
 export const getStaticProps: GetStaticProps = async ctx => {
-  const { data } = await api('episodes')
-
-  const episode = data.episodes.find(
-    (episode: IEpisode) => episode.id === ctx.params?.slug
-  )
-  const formattedEpisode = {
-    ...episode,
-    published_at: format(parseISO(episode.published_at), 'd MMM yy', {
-      locale: ptBR,
-    }),
-    file: {
-      duration: convertDurationToTimeString(episode.file.duration),
+  const episode = await loadEpisodes({
+    params: {
+      id: ctx.params?.slug,
     },
-  }
+  })
 
   return {
     props: {
-      episode: formattedEpisode,
+      episode: episode[0],
     },
     revalidate: 60 * 60 * 24, // 1 day
   }
@@ -50,9 +53,12 @@ interface IProps {
 }
 
 const Episode: NextPage<IProps> = ({ episode }) => {
-  console.log(episode)
   return (
     <EpisodeWrapper>
+      <Head>
+        <title>Podcastr - {episode.title}</title>
+      </Head>
+
       <ThumbnailContainer>
         <Link href="/">
           <a>
