@@ -11,6 +11,9 @@ import {
 import { MdPlayArrow } from 'react-icons/md'
 import Link from 'next/link'
 import loadEpisodes from '../lib/loadEpisodes'
+import usePlayerContext from '../context/PlayerContext/usePlayerContext'
+import Image from 'next/image'
+import { useEffect } from 'react'
 
 export const getStaticProps: GetStaticProps = async () => {
   const episodes = await loadEpisodes({
@@ -39,6 +42,8 @@ interface IProps {
 }
 
 const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
+  const { play } = usePlayerContext()
+
   return (
     <HomeWrapper>
       <LatestEpisode>
@@ -61,7 +66,17 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
                 <span>{episode.file.duration}</span>
               </EpisodeDetails>
 
-              <button>
+              <button
+                onClick={() => {
+                  play({
+                    duration: episode.file.duration,
+                    members: episode.members,
+                    thumbnail: episode.thumbnail,
+                    title: episode.title,
+                    url: episode.file.url,
+                  })
+                }}
+              >
                 <MdPlayArrow />
               </button>
             </li>
@@ -88,13 +103,19 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
             <tbody>
               {allEpisodes.map(episode => (
                 <tr key={episode.id}>
-                  <td>
-                    <img
-                      width={120}
-                      height={120}
-                      src={episode.thumbnail}
-                      alt={episode.title}
-                    />
+                  <td colSpan={1}>
+                    <div className="thumbnail-container">
+                      <Image
+                        layout="fill"
+                        style={{
+                          borderRadius: '.5rem',
+                        }}
+                        objectFit="cover"
+                        src={episode.thumbnail}
+                        alt={episode.title}
+                        className="thumbnail"
+                      />
+                    </div>
                   </td>
                   <td>
                     <Link href={`/episode/${episode.id}`}>{episode.title}</Link>
@@ -103,7 +124,17 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
                   <td style={{ width: 100 }}>{episode.published_at}</td>
                   <td>{episode.file.duration}</td>
                   <td>
-                    <button>
+                    <button
+                      onClick={() =>
+                        play({
+                          duration: episode.file.duration,
+                          members: episode.members,
+                          thumbnail: episode.thumbnail,
+                          title: episode.title,
+                          url: episode.file.url,
+                        })
+                      }
+                    >
                       <MdPlayArrow />
                     </button>
                   </td>

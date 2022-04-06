@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'react'
 import { ThemeProvider } from 'styled-components'
 import Header from '../components/Header'
 import Player from '../components/Player'
+import PlayerContextProvider from '../context/PlayerContext'
 import {
   AppContainer,
   ComponentWrapper,
@@ -24,29 +25,33 @@ function MyApp({ Component, pageProps }: AppProps) {
       }
     }
 
+    router.events.on('routeChangeComplete', handleRouteComplete)
+
     return () => {
       router.events.off('routeChangeComplete', handleRouteComplete)
     }
   }, [router])
 
   return (
-    <ThemeProvider theme={mainTheme}>
-      <Head>
-        <title>Podcastr</title>
-      </Head>
+    <PlayerContextProvider>
+      <ThemeProvider theme={mainTheme}>
+        <Head>
+          <title>Podcastr</title>
+        </Head>
 
-      <AppContainer>
-        <MainContainer>
-          <Header />
-          <ComponentWrapper ref={mainContainerRef}>
-            <Component {...pageProps} />
-          </ComponentWrapper>
-        </MainContainer>
+        <AppContainer>
+          <MainContainer>
+            <Header />
+            <ComponentWrapper ref={mainContainerRef}>
+              <Component {...pageProps} />
+            </ComponentWrapper>
+          </MainContainer>
 
-        <Player />
-      </AppContainer>
-      <GlobalStyles />
-    </ThemeProvider>
+          <Player />
+        </AppContainer>
+        <GlobalStyles />
+      </ThemeProvider>
+    </PlayerContextProvider>
   )
 }
 

@@ -120,10 +120,10 @@ export const EpisodeDetails = styled.div`
 export const AllEpisodes = styled.section`
   & > div {
     overflow-x: auto;
-    white-space: nowrap;
   }
 
   table {
+    min-width: 700px;
     width: 100%;
 
     table tbody {
@@ -145,12 +145,12 @@ export const AllEpisodes = styled.section`
 
     td {
       font-size: 0.875rem;
+      position: relative;
 
-      img {
-        width: 2.5rem;
-        height: 2.5rem;
-        object-fit: cover;
-        border-radius: 0.5rem;
+      .thumbnail-container {
+        position: relative;
+        width: 52px;
+        height: 52px;
       }
 
       a {

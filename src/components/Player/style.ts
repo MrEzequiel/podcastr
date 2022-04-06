@@ -44,14 +44,63 @@ export const PlayerEmpty = styled.div`
   justify-content: center;
 `
 
+export const PlayerWithEpisode = styled.div`
+  width: 100%;
+
+  .fade-enter {
+    opacity: 0;
+  }
+  .fade-exit {
+    opacity: 1;
+  }
+  .fade-enter-active {
+    opacity: 1;
+  }
+  .fade-exit-active {
+    opacity: 0;
+  }
+  .fade-enter-active,
+  .fade-exit-active {
+    transition: opacity 500ms;
+  }
+
+  .thumbnail-wrapper {
+    position: relative;
+    width: 100%;
+    height: 20rem;
+    border-radius: 1.5rem;
+    overflow: hidden;
+  }
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+
+  strong {
+    font-family: ${props => props.theme.font.heading};
+    font-family: 600;
+    font-size: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  span {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    opacity: 0.6;
+    line-height: 1.5rem;
+  }
+`
+
 interface IFooterProps {
-  isPlaying: boolean
+  isEmpty: boolean
 }
 
 export const PlayerFooter = styled.footer<IFooterProps>`
   align-self: stretch;
 
-  ${props => !props.isPlaying && `opacity: 0.5`}
+  ${props => props.isEmpty && `opacity: 0.5`}
 `
 
 export const PlayerProgress = styled.div`
@@ -101,6 +150,15 @@ export const ButtonAction = styled.button<IPlayerActionProps>`
 
   color: #fff;
   font-size: 1.5rem;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &:hover:not(:disabled) {
+    filter: brightness(0.8);
+  }
 
   ${props =>
     props.isBig &&
@@ -110,5 +168,10 @@ export const ButtonAction = styled.button<IPlayerActionProps>`
       border-radius: 1rem;
       font-size: 1.75rem;
       background: ${props => props.theme.colors.purple400};
+
+      &:hover:not(:disabled) {
+        filter: brightness(0.95);
+        transform: scale(0.99);
+      }
     `}
 `

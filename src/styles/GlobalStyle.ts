@@ -9,6 +9,11 @@ export const GlobalStyles = createGlobalStyle`
     scroll-behavior: smooth;
   }
 
+  ::selection {
+    background: ${({ theme }) => theme.colors.purple500};
+    color: ${({ theme }) => theme.colors.white};
+  }
+
   html {
     @media (max-width: 1080px) {
       font-size: 93.75%; // 15px

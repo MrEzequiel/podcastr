@@ -4,6 +4,7 @@ export const HeaderContainer = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 15px 10px -15px rgba(0, 0, 0, 0.1);
 
   height: 6.5rem;
   padding: 2rem 4rem;

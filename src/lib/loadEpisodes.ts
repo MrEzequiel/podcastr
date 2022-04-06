@@ -18,6 +18,8 @@ const loadEpisodes = async (
     }),
     file: {
       duration: convertDurationToTimeString(episode.file.duration),
+      type: episode.file.type,
+      url: episode.file.url,
     },
   })
 
