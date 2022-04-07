@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import {
   ButtonAction,
@@ -25,6 +25,9 @@ import {
 } from 'react-icons/md'
 import usePlayerContext from '../../context/PlayerContext/usePlayerContext'
 import { useTheme } from 'styled-components'
+import convertDurationToTimeString, {
+  convertTimeStringToNumber,
+} from '../../utils/convertDurationToTimeString'
 
 const Player: React.FC = () => {
   const theme = useTheme()
@@ -34,8 +37,17 @@ const Player: React.FC = () => {
     isPlaying,
     togglePlay,
     setPlayingState,
+    playNext,
+    playPrev,
+    isLooping,
+    toogleLoop,
+    isShuffling,
+    toggleShuffle,
+    clearPlayerState,
   } = usePlayerContext()
+
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [progress, setProgress] = useState(0)
 
   const hasEpisodes = episodes.length > 0 && currentEpisodeIndex !== null
 
@@ -51,13 +63,50 @@ const Player: React.FC = () => {
 
   useEffect(() => {
     if (!audioRef.current) return
-    audioRef.current.volume = 0.1
-  }, [])
+    audioRef.current.volume = 0.2
+  }, [isPlaying])
+
+  const handleSeek = (value: number | number[]) => {
+    if (Array.isArray(value)) return
+
+    if (!audioRef.current) return
+    audioRef.current.currentTime = value
+    setProgress(value)
+  }
+
+  const setupProgressListener = () => {
+    if (!audioRef.current) return
+
+    audioRef.current.currentTime = 0
+
+    const handleProgress = () => {
+      if (!audioRef.current) return
+      const currentTime = Math.floor(audioRef.current.currentTime)
+      setProgress(currentTime)
+    }
+
+    audioRef.current.addEventListener('timeupdate', handleProgress)
+
+    return () => {
+      if (!audioRef.current) return
+      audioRef.current.removeEventListener('timeupdate', handleProgress)
+    }
+  }
+
+  const handleEpisodeEnded = () => {
+    if (episodes.length === 1) {
+      clearPlayerState()
+    } else {
+      playNext()
+    }
+  }
 
   return (
     <>
       {hasEpisodes && (
         <audio
+          autoPlay
+          loop={isLooping}
           src={episodes[currentEpisodeIndex].url}
           ref={audioRef}
           onPlay={() => {
@@ -66,6 +115,8 @@ const Player: React.FC = () => {
           onPause={() => {
             setPlayingState(false)
           }}
+          onEnded={handleEpisodeEnded}
+          onLoadedMetadata={setupProgressListener}
         />
       )}
 
@@ -102,11 +153,16 @@ const Player: React.FC = () => {
 
         <PlayerFooter isEmpty={!hasEpisodes}>
           <PlayerProgress>
-            <span>00:00</span>
+            <span>{convertDurationToTimeString(progress)}</span>
 
             <PlayerSlider>
               {hasEpisodes ? (
                 <Slider
+                  value={progress}
+                  max={convertTimeStringToNumber(
+                    episodes[currentEpisodeIndex].duration.toString()
+                  )}
+                  onChange={handleSeek}
                   trackStyle={{
                     background: theme.colors.green500,
                   }}
@@ -123,14 +179,27 @@ const Player: React.FC = () => {
               )}
             </PlayerSlider>
 
-            <span>00:00</span>
+            <span>
+              {hasEpisodes
+                ? episodes[currentEpisodeIndex].duration
+                : '00:00:00'}
+            </span>
           </PlayerProgress>
 
           <PlayerActions>
-            <ButtonAction type="button" disabled={!hasEpisodes}>
+            <ButtonAction
+              type="button"
+              disabled={!hasEpisodes || episodes.length === 1}
+              isActive={isShuffling}
+              onClick={toggleShuffle}
+            >
               <MdShuffle />
             </ButtonAction>
-            <ButtonAction type="button" disabled={!hasEpisodes}>
+            <ButtonAction
+              type="button"
+              disabled={!hasEpisodes || episodes.length === 1}
+              onClick={playPrev}
+            >
               <MdKeyboardArrowLeft />
             </ButtonAction>
             <ButtonAction
@@ -141,10 +210,19 @@ const Player: React.FC = () => {
             >
               {isPlaying ? <MdPause /> : <MdPlayArrow />}
             </ButtonAction>
-            <ButtonAction type="button" disabled={!hasEpisodes}>
+            <ButtonAction
+              type="button"
+              disabled={!hasEpisodes || episodes.length === 1}
+              onClick={playNext}
+            >
               <MdKeyboardArrowRight />
             </ButtonAction>
-            <ButtonAction type="button" disabled={!hasEpisodes}>
+            <ButtonAction
+              type="button"
+              disabled={!hasEpisodes}
+              onClick={toogleLoop}
+              isActive={isLooping}
+            >
               <MdRepeat />
             </ButtonAction>
           </PlayerActions>

@@ -22,10 +22,11 @@ export const ThumbnailContainer = styled.div`
 
   animation: fadeIn 800ms ease forwards;
 
-  img {
+  .thumbnail-container {
+    position: relative;
     width: 100%;
-    height: 15rem;
-    object-fit: cover;
+    height: 18.5rem;
+    overflow: hidden;
     border-radius: 1rem;
   }
 

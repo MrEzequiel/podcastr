@@ -33,7 +33,9 @@ export const LatestEpisode = styled.section`
       display: flex;
       align-items: center;
 
-      img {
+      .thumbnail-container {
+        position: relative;
+        overflow: hidden;
         width: 6rem;
         height: 6rem;
         border-radius: 1rem;
@@ -46,6 +48,14 @@ export const LatestEpisode = styled.section`
     position: absolute;
     right: 2rem;
     bottom: 2rem;
+
+    transition: all 0.2s ease-in-out;
+
+    &.playing {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px -6px ${({ theme }) => theme.colors.purple300};
+      border-color: ${({ theme }) => theme.colors.purple300};
+    }
 
     display: flex;
     align-items: center;
@@ -167,6 +177,14 @@ export const AllEpisodes = styled.section`
         display: flex;
         align-items: center;
         justify-content: center;
+
+        transition: all 0.2s ease-in-out;
+
+        &.playing {
+          transform: scale(1.05);
+          box-shadow: 0 0 12px -6px ${({ theme }) => theme.colors.purple300};
+          border-color: ${({ theme }) => theme.colors.purple300};
+        }
 
         svg {
           color: ${({ theme }) => theme.colors.purple300};

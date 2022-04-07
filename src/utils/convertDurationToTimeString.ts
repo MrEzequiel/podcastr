@@ -10,4 +10,9 @@ const convertDurationToTimeString = (duration: number): string => {
   return formated
 }
 
+export const convertTimeStringToNumber = (timeString: string): number => {
+  const [hours, minutes, seconds] = timeString.split(':').map(Number)
+  return hours * 3600 + minutes * 60 + seconds
+}
+
 export default convertDurationToTimeString

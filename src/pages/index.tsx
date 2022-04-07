@@ -8,12 +8,12 @@ import {
   LatestEpisode,
 } from '../styles/HomeStyle'
 
-import { MdPlayArrow } from 'react-icons/md'
+import { MdPause, MdPlayArrow } from 'react-icons/md'
 import Link from 'next/link'
 import loadEpisodes from '../lib/loadEpisodes'
 import usePlayerContext from '../context/PlayerContext/usePlayerContext'
 import Image from 'next/image'
-import { useEffect } from 'react'
+import { formatArrayEpisodeFromPlayer } from '../helpers/formatFromPlayer'
 
 export const getStaticProps: GetStaticProps = async () => {
   const episodes = await loadEpisodes({
@@ -42,7 +42,26 @@ interface IProps {
 }
 
 const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
-  const { play } = usePlayerContext()
+  const {
+    play,
+    playList,
+    isPlaying,
+    currentEpisodeIndex,
+    episodes,
+    setPlayingState,
+  } = usePlayerContext()
+  const episodeList = [
+    ...formatArrayEpisodeFromPlayer(latestEpisodes),
+    ...formatArrayEpisodeFromPlayer(allEpisodes),
+  ]
+
+  const verifyThisEpisodeIsPlaying = (thisEpisode: IEpisode) => {
+    return (
+      isPlaying &&
+      currentEpisodeIndex !== null &&
+      episodes[currentEpisodeIndex].url === thisEpisode.file.url
+    )
+  }
 
   return (
     <HomeWrapper>
@@ -50,14 +69,16 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
         <h2>Últimos lançamentos</h2>
 
         <ul>
-          {latestEpisodes.map(episode => (
+          {latestEpisodes.map((episode, index) => (
             <li key={episode.id}>
-              <img
-                width={192}
-                height={192}
-                src={episode.thumbnail}
-                alt={episode.title}
-              />
+              <div className="thumbnail-container">
+                <Image
+                  layout="fill"
+                  objectFit="cover"
+                  src={episode.thumbnail}
+                  alt={episode.title}
+                />
+              </div>
 
               <EpisodeDetails>
                 <Link href={`/episode/${episode.id}`}>{episode.title}</Link>
@@ -67,17 +88,20 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
               </EpisodeDetails>
 
               <button
+                className={verifyThisEpisodeIsPlaying(episode) ? 'playing' : ''}
                 onClick={() => {
-                  play({
-                    duration: episode.file.duration,
-                    members: episode.members,
-                    thumbnail: episode.thumbnail,
-                    title: episode.title,
-                    url: episode.file.url,
-                  })
+                  if (verifyThisEpisodeIsPlaying(episode)) {
+                    setPlayingState(false)
+                  } else {
+                    playList(episodeList, index)
+                  }
                 }}
               >
-                <MdPlayArrow />
+                {verifyThisEpisodeIsPlaying(episode) ? (
+                  <MdPause />
+                ) : (
+                  <MdPlayArrow />
+                )}
               </button>
             </li>
           ))}
@@ -101,7 +125,7 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
             </thead>
 
             <tbody>
-              {allEpisodes.map(episode => (
+              {allEpisodes.map((episode, index) => (
                 <tr key={episode.id}>
                   <td colSpan={1}>
                     <div className="thumbnail-container">
@@ -125,17 +149,22 @@ const Home: NextPage<IProps> = ({ latestEpisodes, allEpisodes }) => {
                   <td>{episode.file.duration}</td>
                   <td>
                     <button
-                      onClick={() =>
-                        play({
-                          duration: episode.file.duration,
-                          members: episode.members,
-                          thumbnail: episode.thumbnail,
-                          title: episode.title,
-                          url: episode.file.url,
-                        })
+                      className={
+                        verifyThisEpisodeIsPlaying(episode) ? 'playing' : ''
                       }
+                      onClick={() => {
+                        if (verifyThisEpisodeIsPlaying(episode)) {
+                          setPlayingState(false)
+                        } else {
+                          playList(episodeList, index + latestEpisodes.length)
+                        }
+                      }}
                     >
-                      <MdPlayArrow />
+                      {verifyThisEpisodeIsPlaying(episode) ? (
+                        <MdPause />
+                      ) : (
+                        <MdPlayArrow />
+                      )}
                     </button>
                   </td>
                 </tr>

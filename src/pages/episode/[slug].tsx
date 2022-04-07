@@ -1,6 +1,6 @@
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import Link from 'next/link'
-import { MdArrowBack, MdPlayArrow } from 'react-icons/md'
+import { MdArrowBack, MdPause, MdPlayArrow } from 'react-icons/md'
 
 import IEpisode from '../../interface/IEpisode'
 import {
@@ -11,6 +11,9 @@ import {
 } from '../../styles/EpisodeStyle'
 import loadEpisodes from '../../lib/loadEpisodes'
 import Head from 'next/head'
+import Image from 'next/image'
+import usePlayerContext from '../../context/PlayerContext/usePlayerContext'
+import { formatEpisodeFromPlayer } from '../../helpers/formatFromPlayer'
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const episodesForPath = await loadEpisodes({
@@ -53,6 +56,17 @@ interface IProps {
 }
 
 const Episode: NextPage<IProps> = ({ episode }) => {
+  const { play, episodes, currentEpisodeIndex, isPlaying, setPlayingState } =
+    usePlayerContext()
+
+  const verifyThisEpisodeIsPlaying = () => {
+    return (
+      isPlaying &&
+      currentEpisodeIndex !== null &&
+      episodes[currentEpisodeIndex].url === episode.file.url
+    )
+  }
+
   return (
     <EpisodeWrapper>
       <Head>
@@ -68,10 +82,25 @@ const Episode: NextPage<IProps> = ({ episode }) => {
           </a>
         </Link>
 
-        <img src={episode.thumbnail} alt={episode.title} />
+        <div className="thumbnail-container">
+          <Image
+            layout="fill"
+            src={episode.thumbnail}
+            alt={episode.title}
+            objectFit="cover"
+          />
+        </div>
 
-        <button>
-          <MdPlayArrow />
+        <button
+          onClick={() => {
+            if (verifyThisEpisodeIsPlaying()) {
+              setPlayingState(false)
+            } else {
+              play(formatEpisodeFromPlayer(episode))
+            }
+          }}
+        >
+          {verifyThisEpisodeIsPlaying() ? <MdPause /> : <MdPlayArrow />}
         </button>
       </ThumbnailContainer>
 

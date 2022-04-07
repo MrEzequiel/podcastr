@@ -137,6 +137,7 @@ export const PlayerActions = styled.div`
 
 interface IPlayerActionProps {
   isBig?: boolean
+  isActive?: boolean
 }
 
 export const ButtonAction = styled.button<IPlayerActionProps>`
@@ -152,12 +153,51 @@ export const ButtonAction = styled.button<IPlayerActionProps>`
   font-size: 1.5rem;
   transition: all 0.2s ease;
 
+  position: relative;
+
+  svg {
+    color: ${props =>
+      props.isActive ? props.theme.colors.green500 : props.theme.colors.white};
+  }
+
+  ${props =>
+    props.isActive &&
+    css`
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: ${props => props.theme.colors.green500};
+
+        @keyframes appear {
+          from {
+            transform: translateX(-50%) scale(0);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+          }
+        }
+
+        animation: appear 200ms ease forwards;
+      }
+    `}
+
   &:disabled {
     cursor: default;
+    opacity: 0.5;
   }
 
   &:hover:not(:disabled) {
-    filter: brightness(0.8);
+    filter: ${props =>
+      !props.isActive ? 'brightness(0.8)' : 'brightness(0.95)'};
   }
 
   ${props =>
