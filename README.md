@@ -1,34 +1,60 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1 align="center">
+  <img alt="podcastr logo" title="podcastr logo" src="./public/logo.svg" width="200px" />
+</h1>
 
-## Getting Started
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<p align="center">
+  <a href="#-technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#-learned">Learned</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
+  <a href="#-author">Author</a>&nbsp;&nbsp;
+</p>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## ✨ Preview
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+https://user-images.githubusercontent.com/85039218/162301295-5cbf4bd8-73d9-4bb2-8e76-80b59f4cf23d.mp4
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
-## Learn More
+<br />
+<hr />
+<br />
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Technologies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project was made with the following technologies:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- ReactJS ⚛️
+- NextJS ▲
+- styled-components 💅🏾
 
-## Deploy on Vercel
+<br />
+<hr />
+<br />
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📐 Project
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Application developed in NLW 5 (next level week), in order to better understand how the Next framework works, making a complete podcast application with a fake api.
+
+<br />
+<hr />
+<br />
+
+## 📒 Learned
+
+- [x] NextJS: Image component, SSR, SSG, ISR;
+- [x] ReactJS: Audio tag manipulation;
+
+<br />
+<hr />
+<br />
+
+## 👨‍💻 Author
+
+- Github: <a href="https://github.com/MrEzequiel">MrEzequiel</a>
+- Instagram: <a href="https://www.instagram.com/ezequield3v/">@ezequield3v</a>
+- Linkedin: <a href="https://www.linkedin.com/in/ezequiel-soares-da-silva-b64a64207">Ezequiel Soares</a>
+
+<br>
+<h2 align="center">Made with ♥ by Ezequiel</h2>
